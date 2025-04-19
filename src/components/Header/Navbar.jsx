@@ -21,7 +21,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Home", path: "/", icon: "🏠" },
-    { name: "Works", path: "/works", icon: "🖼️" },
+    { name: "Works", path: "/works", icon: "✨" },
     { name: "About", path: "/about", icon: "👤" },
     { name: "Contact", path: "/contact", icon: "✉️" },
   ];
@@ -46,7 +46,7 @@ const Navbar = () => {
     },
     hover: {
       y: -5,
-      rotateX: 10,
+      rotateZ: [0, -3, 3, 0],
       transition: { type: "spring", stiffness: 400 },
     },
     tap: { scale: 0.95 },
@@ -57,52 +57,75 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", damping: 10 }}
-      className={`sticky top-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 text-white ${
+      className={`fixed top-0 w-full z-50 ${
         isScrolled
-          ? "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-purple-900 via-indigo-800 to-blue-900 backdrop-blur-md shadow-lg"
-          : "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/80 via-gray-900 to-black/90"
-      } transition-all duration-500`}
+          ? "bg-gray-900/90 backdrop-blur-md shadow-xl"
+          : "bg-transparent"
+      } transition-all duration-300`}
     >
-      {/* Animated floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-white/10"
-            initial={{
-              x: Math.random() * 100 + "vw",
-              y: Math.random() * 100 + "vh",
-              width: Math.random() * 10 + 5 + "px",
-              height: Math.random() * 10 + 5 + "px",
-            }}
-            animate={{
-              y: [0, -50],
-              opacity: [0.2, 0.8, 0],
-              transition: {
-                duration: Math.random() * 10 + 10,
-                repeat: Infinity,
-                repeatType: "reverse",
-                delay: Math.random() * 5,
-              },
-            }}
-          />
-        ))}
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-purple-600/20 blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.6, 0.8, 0.6],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/4 w-72 h-72 rounded-full bg-cyan-600/20 blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 0.7, 0.5],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            delay: 2,
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
+          {/* Logo Section - Updated with Name */}
           <motion.div
-            whileHover={{ rotateY: 180 }}
-            transition={{ duration: 0.6 }}
-            className="flex-shrink-0 z-10"
+            whileHover={{
+              rotateY: 180,
+              scale: 1.05,
+              transition: { duration: 0.6 },
+            }}
+            className="flex-shrink-0 relative z-10 flex items-center gap-2"
           >
             <NavLink
               to="/"
-              className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+              className="text-3xl font-bold bg-gradient-to-r from-cyan-300 via-purple-400 to-pink-400 bg-clip-text text-transparent"
             >
-              DesignFolio
+              Rafim Khan
             </NavLink>
+            <motion.span
+              className="text-sm font-medium text-gray-300 hidden md:block"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Portfolio
+            </motion.span>
+            <motion.span
+              className="absolute -top-1 -right-2 w-2 h-2 bg-pink-400 rounded-full"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -110,7 +133,7 @@ const Navbar = () => {
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="hidden md:flex space-x-4"
+            className="hidden md:flex space-x-1"
           >
             {navItems.map((item) => (
               <motion.div
@@ -130,15 +153,19 @@ const Navbar = () => {
                 >
                   {({ isActive }) => (
                     <>
-                      <span className="text-xl mb-1 group-hover:scale-125 transition-transform">
+                      <motion.span
+                        className="text-xl mb-1"
+                        whileHover={{ scale: 1.3 }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
                         {item.icon}
-                      </span>
+                      </motion.span>
                       <span className="text-sm font-medium">{item.name}</span>
                       {isActive && (
                         <motion.span
                           layoutId="navIndicator"
                           className="absolute bottom-0 left-1/2 w-4/5 h-1 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full -translate-x-1/2"
-                          transition={{ type: "spring", bounce: 0.25 }}
+                          transition={{ type: "spring", bounce: 0.3 }}
                         />
                       )}
                     </>
@@ -150,13 +177,14 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="md:hidden p-2 text-gray-300 hover:text-white focus:outline-none z-10"
+            className="md:hidden p-2 rounded-full bg-gradient-to-br from-cyan-400/20 to-purple-600/20 backdrop-blur-sm border border-cyan-300/30 shadow-lg shadow-cyan-400/10 z-10"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
             <svg
-              className="w-8 h-8"
+              className="w-6 h-6 text-white"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -185,42 +213,80 @@ const Navbar = () => {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: "-100vh" }}
+            initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100vh" }}
-            transition={{ type: "spring", damping: 20 }}
-            className="md:hidden fixed inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-purple-900/95 via-gray-900 to-black/95 backdrop-blur-xl pt-24 z-30"
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="md:hidden fixed inset-0 bg-gradient-to-b from-purple-900/95 via-indigo-900/95 to-blue-900/95 backdrop-blur-xl pt-32 z-30 overflow-y-auto"
+            style={{ height: "100vh" }}
           >
+            {/* Close Button */}
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="absolute top-6 right-6 p-2 rounded-full bg-gradient-to-br from-cyan-400/20 to-purple-600/20 backdrop-blur-sm border border-cyan-300/30 shadow-lg shadow-cyan-400/10 z-40"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+            >
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </motion.button>
+
             <motion.ul
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               className="container mx-auto px-6 space-y-6"
             >
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <motion.li
                   key={item.path}
                   variants={itemVariants}
+                  custom={index}
                   className="overflow-hidden"
                 >
                   <NavLink
                     to={item.path}
                     className={({ isActive }) =>
-                      `flex items-center text-3xl font-medium py-6 px-4 rounded-xl ${
+                      `flex items-center text-2xl font-medium py-5 px-6 rounded-xl ${
                         isActive
-                          ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-white"
-                          : "text-gray-400 hover:text-white hover:bg-white/5"
+                          ? "bg-gradient-to-r from-cyan-400/20 to-purple-600/20 text-white shadow-lg"
+                          : "text-gray-400 hover:bg-gray-800/30 hover:text-white"
                       }`
                     }
+                    onClick={() => setMobileOpen(false)}
                   >
                     {({ isActive }) => (
                       <>
-                        <span className="mr-6">{item.icon}</span>
-                        {item.name}
+                        <motion.span
+                          className="mr-4 text-2xl"
+                          animate={{
+                            scale: isActive ? [1, 1.2, 1] : 1,
+                          }}
+                          transition={{
+                            duration: 0.6,
+                          }}
+                        >
+                          {item.icon}
+                        </motion.span>
+                        <span className="flex-1">{item.name}</span>
                         {isActive && (
                           <motion.span
-                            layoutId="mobileIndicator"
-                            className="ml-auto w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600"
+                            className="w-3 h-3 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 500 }}
                           />
                         )}
                       </>
@@ -229,6 +295,21 @@ const Navbar = () => {
                 </motion.li>
               ))}
             </motion.ul>
+
+            {/* Decorative element */}
+            <div className="absolute bottom-10 left-0 right-0 flex justify-center">
+              <motion.div
+                className="w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent rounded-full"
+                animate={{
+                  scaleX: [1, 1.5, 1],
+                  opacity: [0.6, 1, 0.6],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
