@@ -57,7 +57,7 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", damping: 10 }}
-      className={`sticky top-0 w-full z-50 ${
+      className={`sticky top-0 w-full z-50 bg-gradient-to-b from-gray-900 to-gray-800 text-white ${
         isScrolled
           ? "bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-purple-900 via-indigo-800 to-blue-900 backdrop-blur-md shadow-lg"
           : "bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/80 via-gray-900 to-black/90"
